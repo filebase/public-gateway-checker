@@ -1,4 +1,6 @@
-const hashToTest = 'Qmaisz6NMhDB51cCvNWa1GMS7LU1pAxdF4Ld6Ft9kZEP2a'
+const searchParams = new URLSearchParams(window.location.search);
+const cid = searchParams.get('cid') || 'Qmaisz6NMhDB51cCvNWa1GMS7LU1pAxdF4Ld6Ft9kZEP2a'
+const hashToTest = cid
 const hashString = 'Hello from IPFS Gateway Checker'
 
 const $results = document.querySelector('#results')
