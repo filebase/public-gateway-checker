@@ -1,5 +1,6 @@
 const searchParams = new URLSearchParams(window.location.search);
 const cid = searchParams.get('cid') || 'Qmaisz6NMhDB51cCvNWa1GMS7LU1pAxdF4Ld6Ft9kZEP2a'
+const corsApi = searchParams.get('cors') || ''
 const hashToTest = cid
 const hashString = 'Hello from IPFS Gateway Checker'
 
@@ -36,13 +37,23 @@ function checkGateways (gateways) {
   gateways.forEach((gateway) => {
     const gatewayAndHash = gateway.replace(':hash', hashToTest)
     // opt-out from gateway redirects done by browser extension
+    const corsHost = corsApi
     const testUrl = gatewayAndHash + '#x-ipfs-companion-no-redirect'
     const start = performance.now()
-    fetch(testUrl)
-      .then(res => res.text())
-      .then((text) => {
-        const matched = text.trim() === hashString.trim()
-        const status = matched ? 'All good' : 'Output did not match expected output'
+    fetch(corsHost+testUrl)
+      .then(res => {
+        if(res.status === 200){
+          return true;
+        }else{
+          return Promise.reject(false);
+        }
+      })
+      .then(() => {
+        // console.log('text',text);
+        // const matched = text.trim() === hashString.trim()
+        // const status = matched ? 'All good' : 'Output did not match expected output'
+        const matched = true;
+        const status = 'All good'
         const ms = performance.now() - start
         addNode(gatewayAndHash, matched, status, ms);
         checked++
